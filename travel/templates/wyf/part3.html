@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+                    <div class="pcoded-content">
+                        <!-- Page-header start -->
+                        <div class="page-header">
+                            <div class="page-block">
+                                <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <div class="page-header-title">
+                                            <h5 class="m-b-10">景点价格信息</h5>
+                                            <p class="m-b-0">景点门票价格分析</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <ul class="breadcrumb-title">
+                                            <li class="breadcrumb-item">
+                                                <a href="{% url 'home:index' %}"> <i class="fa fa-home"></i> </a>
+                                            </li>
+                                            <li class="breadcrumb-item"><a href="#!">数据可视化</a>
+                                            </li>
+                                            <li class="breadcrumb-item"><a href="#!">景点门票价格分析</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Page-header end -->
+                        <div class="pcoded-inner-content">
+                            <!-- Main-body start -->
+                            <div class="main-body">
+                                <div class="page-wrapper">
+                                    <div class="page-body">
+                                        <div class="row">
+
+                                            <div class="col-lg-12">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h5 class="card-headeer-text">景区评论数排行</h5>
+                                                    </div>
+                                                    <div class="card-block according-block">
+                                                        <div class="according-box" id="part3" style="width:100%;height:600px;"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                           </div>
+                                        </div>
+                                </div>
+                            </div>
+                            <div id="styleSelector">
+                            </div>
+                        </div>
+                    </div>
+        <script src="{% static 'assets/js/echarts/echarts.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'assets/js/jquery/jquery.min.js' %}"></script>
+
+        <script>
+                var chartDom = document.getElementById('part3');
+                var myChart = echarts.init(chartDom);
+                var option;
+
+                option = {
+                  // 全局样式
+                  tooltip: {
+                    trigger: 'item',
+                    formatter: '{b}<br>数值: {c}',
+                    backgroundColor: 'rgba(255,255,255,0.9)',
+                    borderColor: '#ddd',
+                    textStyle: { color: '#333' }
+                  },
+                  // 网格布局
+                  grid: {
+                    left: '0%',
+                    right: '1%',
+                    bottom: '3%',
+                    containLabel: true,
+                    backgroundColor: '#fafbfc'
+                  },
+                  // X轴
+                  xAxis: {
+                    type: 'category',
+                    data: {{ name_list |safe }},
+                    axisLine: { lineStyle: { color: '#e5e9f2' } },
+                    axisLabel: { color: '#8392a5',
+                                  align: 'left'}
+                  },
+                  // Y轴
+                  yAxis: {
+                    type: 'value',
+                    axisLine: { show: false },
+                    axisLabel: { color: '#8392a5' },
+                    splitLine: { lineStyle: { color: '#e5e9f2', type: 'dashed' } },
+                    axisPointer: { show: true }
+                  },
+                  // 系列数据
+                  series: [
+                    {
+                      data: {{ value_list |safe }},
+                      type: 'line',
+                      smooth: true,
+                      symbol: 'circle',
+                      symbolSize: 6,
+                      // 折线颜色与渐变填充
+                      lineStyle: { color: '#69c0ff', width: 2 },
+                      areaStyle: {
+                        color: {
+                          type: 'linear',
+                          x: 0,
+                          y: 0,
+                          x2: 0,
+                          y2: 1,
+                          colorStops: [
+                            { offset: 0, color: 'rgba(105, 192, 255, 0.3)' },
+                            { offset: 1, color: 'rgba(105, 192, 255, 0.05)' }
+                          ]
+                        }
+                      },
+                      // 悬浮点样式
+                      emphasis: {
+                        focus: 'series',
+                        itemStyle: { color: '#69c0ff', borderColor: '#fff', borderWidth: 2 }
+                      },
+                      markLine: {
+                        silent: true,
+                        data: [{ yAxis: 200 }],
+                        lineStyle: {
+                          color: '#f9c700',
+                          type: 'dashed',
+                          width: 1.5
+                        },
+                        label: {
+                          show: true,
+                          formatter: '平均值: {c}',
+                          color: '#8392a5',
+                          position: 'end'
+                        }
+                      }
+                    }
+                  ]
+                };
+                option && myChart.setOption(option);
+        </script>
+{% endblock %}

@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% block content %}
+    <!-- Page-header start -->
+    <div class="page-header">
+        <div class="page-block">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="page-header-title" style="padding-left: 95px; margin-top: 10px; padding-top: 5px;">
+                        <h5 class="m-b-10">国内旅游景点</h5>
+                        <p class="m-b-0">旅游景点信息展示</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <ul class="breadcrumb-title">
+                        <li class="breadcrumb-item">
+                            <a href="index.html"> <i class="fa fa-home"></i> </a>
+                        </li>
+                        <li class="breadcrumb-item"><a href="#!">布局</a></li>
+                        <li class="breadcrumb-item"><a href="#!">国内旅游景点</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page-header end -->
+    <div class="pcoded-inner-content">
+        <!-- Main-body start -->
+        <div class="main-body">
+            <div class="page-wrapper">
+                <!-- Page-body start -->
+                <div class="page-body">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>国内旅游景点信息</h5>
+                            <div class="card-header-right">
+                                <ul class="list-unstyled card-option">
+                                    <li><i class="fa fa fa-wrench open-card-option"></i></li>
+                                    <li><i class="fa fa-window-maximize full-card"></i></li>
+                                    <li><i class="fa fa-minus minimize-card"></i></li>
+                                    <li><i class="fa fa-refresh reload-card"></i></li>
+                                    <li><i class="fa fa-trash close-card"></i></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-block">
+                            <form method="get" class="search-filter-container">
+                                <div class="search-box">
+                                    <i class="ti-search"></i>
+                                    <input type="text"
+                                           class="form-control"
+                                           name="search_name"
+                                           placeholder="搜索景点名称..."
+                                           value="{{ search_name }}">
+                                </div>
+                                <select class="form-select" name="province">
+                                    <option value="">所有省份</option>
+                                    {% for province in provinces %}
+                                    <option value="{{ province }}"
+                                            {% if province == selected_province %}
+                                            selected
+                                            {% endif %}
+                                    >
+                                        {{ province }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <div class="filter-btn-group">
+                                    <button type="submit"
+                                            class="btn btn-out-dotted waves-effect waves-light btn-primary btn-square">
+                                        <i class="ti-filter"></i> 筛选
+                                    </button>
+                                    <a href="{% url 'home:travel_list' %}"
+                                       class="btn btn-out-dotted waves-effect waves-light btn-info btn-square">
+                                        <i class="ti-reload"></i> 重置
+                                    </a>
+                                </div>
+                            </form>
+
+                            <div class="card-block table-border-style">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>景点名称</th>
+                                                <th>图片</th>
+                                                <th>所在区域</th>
+                                                <th>城市</th>
+                                                <th>标签</th>
+                                                <th>实际票价</th>
+                                                <th>省份</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for item in page_obj %}
+                                            <tr>
+                                                <th scope="row">{{ forloop.counter }}</th>
+                                                <td>{{ item.name }}</td>
+                                                <td>
+                                                    <img src="{{ item.image_url }}" alt=""
+                                                         style="max-width:200px;max-height:100px;">
+                                                </td>
+                                                <td>{{ item.area }}</td>
+                                                <td>{{ item.city }}</td>
+                                                <td>{{ item.tags }}</td>
+                                                <td>{{ item.actual_price }}</td>
+                                                <td>{{ item.province }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="pagination justify-content-center">
+                                    <ul class="pagination">
+                                        {% if page_obj.has_previous %}
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                   href="?page=1{% if search_name %}&search_name={{ search_name }}{% endif %}{% if selected_province %}&province={{ selected_province }}{% endif %}">
+                                                    &laquo; 首页
+                                                </a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_name %}&search_name={{ search_name }}{% endif %}{% if selected_province %}&province={{ selected_province }}{% endif %}">
+                                                    上一页
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+                                        {% for num in page_obj.paginator.page_range %}
+                                            {% if page_obj.number == num %}
+                                                <li class="page-item active">
+                                                    <a class="page-link" href="?page={{ num }}{% if search_name %}&search_name={{ search_name }}{% endif %}{% if selected_province %}&province={{ selected_province }}{% endif %}">
+                                                        {{ num }}
+                                                    </a>
+                                                </li>
+                                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                                <li class="page-item">
+                                                    <a class="page-link" href="?page={{ num }}{% if search_name %}&search_name={{ search_name }}{% endif %}{% if selected_province %}&province={{ selected_province }}{% endif %}">
+                                                        {{ num }}
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        {% if page_obj.has_next %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_name %}&search_name={{ search_name }}{% endif %}{% if selected_province %}&province={{ selected_province }}{% endif %}">
+                                                    下一页
+                                                </a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_name %}&search_name={{ search_name }}{% endif %}{% if selected_province %}&province={{ selected_province }}{% endif %}">
+                                                    末页 &raquo;
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                                <div class="text-center">
+                                    当前显示第 {{ page_obj.start_index }} - {{ page_obj.end_index }}
+                                    条，共 {{ page_obj.paginator.count }} 条记录
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Page-body end -->
+            </div>
+        </div>
+        <!-- Main-body end -->
+
+        <div id="styleSelector"></div>
+    </div>
+{% endblock %}

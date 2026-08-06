@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+                    <div class="pcoded-content">
+                        <!-- Page-header start -->
+                        <div class="page-header">
+                            <div class="page-block">
+                                <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <div class="page-header-title">
+                                            <h5 class="m-b-10">景点信息</h5>
+                                            <p class="m-b-0">景点信息词云</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <ul class="breadcrumb-title">
+                                            <li class="breadcrumb-item">
+                                                <a href="{% url 'home:index' %}"> <i class="fa fa-home"></i> </a>
+                                            </li>
+                                            <li class="breadcrumb-item"><a href="#!">数据可视化</a>
+                                            </li>
+                                            <li class="breadcrumb-item"><a href="#!">景点信息词云</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Page-header end -->
+                        <div class="pcoded-inner-content">
+                            <!-- Main-body start -->
+                            <div class="main-body">
+                                <div class="page-wrapper">
+                                    <div class="page-body">
+                                        <div class="row">
+
+                                            <div class="col-lg-12">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h5 class="card-headeer-text">景点信息词云</h5>
+                                                    </div>
+                                                    <div class="card-block according-block">
+                                                        <div class="according-box" id="part5" style="width:100%;height:600px;"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                           </div>
+                                        </div>
+                                </div>
+                            </div>
+                            <div id="styleSelector">
+                            </div>
+                        </div>
+                    </div>
+        <script src="https://unpkg.com/echarts@5.4.3/dist/echarts.min.js"></script>
+        <script src="https://unpkg.com/echarts-wordcloud@2.0.0/dist/echarts-wordcloud.min.js"> </script>
+        <script type="text/javascript" src="{% static 'assets/js/jquery/jquery.min.js' %}"></script>
+
+        <script>
+            // 获取Django模板传递的数据
+           var wordData = {{ data_list|safe }};
+
+           // 初始化图表
+           var chartDom = document.getElementById('part5');
+           var myChart = echarts.init(chartDom);
+
+           // 词云图配置选项
+           var option = {
+
+               tooltip: {
+                   show: true,
+                   formatter: function (params) {
+                       return params.name + ': ' + params.value;
+                   }
+               },
+               series: [{
+                   type: 'wordCloud',
+                   shape: 'circle',
+                   left: 'center',
+                   top: 'center',
+                   width: '90%',
+                   height: '90%',
+                   right: null,
+                   bottom: null,
+                   sizeRange: [12, 60],  // 文字大小范围
+                   rotationRange: [-45, 45], // 旋转角度范围
+                   rotationStep: 15,
+                   gridSize: 8,
+                   drawOutOfBound: false,
+                   textStyle: {
+                       fontFamily: 'sans-serif',
+                       fontWeight: 'bold',
+                       color: function () {
+                           // 随机颜色
+                           return 'rgb(' + [
+                               Math.round(Math.random() * 160),
+                               Math.round(Math.random() * 160),
+                               Math.round(Math.random() * 160)
+                           ].join(',') + ')';
+                       }
+                   },
+                   emphasis: {
+                       focus: 'self',
+                       textStyle: {
+                           shadowBlur: 10,
+                           shadowColor: '#333'
+                       }
+                   },
+                   data: wordData
+               }]
+           };
+
+           // 应用配置
+           myChart.setOption(option);
+
+           // 响应式调整
+           window.addEventListener('resize', function () {
+               myChart.resize();
+           });
+        </script>
+{% endblock %}

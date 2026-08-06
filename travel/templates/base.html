@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <title>首页</title>
+        <style>
+            .pcoded-inner-content {
+            margin-left: 90px; /* 给内容区留左侧间距 */
+        }
+        /* 调整侧边栏宽度 */
+        .pcoded-navbar {
+            width: 90px ; /* 固定侧边栏宽度，避免挤压内容区 */
+        }
+        </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="Mega Able Bootstrap admin template made using Bootstrap 4 and it has huge amount of ready made feature, UI components, pages which completely fulfills any dashboard needs." />
+    <meta name="keywords" content="bootstrap, bootstrap admin template, admin theme, admin dashboard, dashboard template, admin template, responsive" />
+    <!-- Favicon icon -->
+    <link rel="icon" href="{% static 'assets/images/favicon.ico' %}" type="image/x-icon">
+    <!-- Google font-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet">
+    <!-- Required Fremwork -->
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/bootstrap/css/bootstrap.min.css' %}">
+    <!-- waves.css -->
+    <link rel="stylesheet" href="{% static 'assets/pages/waves/css/waves.min.css' %}" type="text/css" media="all">
+    <!-- themify-icons line icon -->
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/icon/themify-icons/themify-icons.css' %}">
+    <!-- ico font -->
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/icon/icofont/css/icofont.css' %}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/icon/font-awesome/css/font-awesome.min.css' %}">
+    <!-- Style.css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/style.css' %}">
+</head>
+
+<body>
+    <!-- Pre-loader start -->
+    <div class="theme-loader">
+        <div class="loader-track">
+            <div class="preloader-wrapper">
+                <div class="spinner-layer spinner-blue">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+                <div class="spinner-layer spinner-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+
+                <div class="spinner-layer spinner-yellow">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+
+                <div class="spinner-layer spinner-green">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Pre-loader end -->
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+            <div class="pcoded-main-container">
+                <div class="pcoded-wrapper">
+                    <nav class="pcoded-navbar">
+                        <div class="sidebar_toggle"><a href="#"><i class="icon-close icons"></i></a></div>
+                        <div class="pcoded-inner-navbar main-menu">
+                            <div class="">
+                                <div class="main-menu-header">
+                                    <img class="img-80 img-radius" src="{{ request.session.avatar }}" alt="User-Profile-Image">
+                                    <div class="user-details">
+                                        <span id="more-details">{{ request.session.uname }}<i class="fa fa-caret-down"></i></span>
+                                    </div>
+                                </div>
+
+                                <div class="main-menu-content">
+                                    <ul>
+                                        <li class="more-details">
+                                            <a href="{% url 'user:changeinfo' %}"><i class="ti-user"></i>个人信息管理</a>
+                                            <a href="{% url 'user:logout' %}"><i class="ti-layout-sidebar-left"></i>退出登录</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="p-15 p-b-0">
+                                <form class="form-material" action="{% url 'home:travel_list' %}" method="get">
+                                    <div class="form-group form-primary">
+                                        <input type="text" name="search_name" class="form-control" required="">
+                                        <span class="form-bar"></span>
+                                        <label class="float-label"><i class="fa fa-search m-r-10"></i>搜索景点</label>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="pcoded-navigation-label" data-i18n="nav.category.navigation">布局</div>
+                            <ul class="pcoded-item pcoded-left-item">
+                                <li class="{% if request.resolver_match.url_name == 'index' %} active {% endif %}">
+                                    <a href="{% url 'home:index' %}" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="ti-home"></i><b>D</b></span>
+                                        <span class="pcoded-mtext" data-i18n="nav.dash.main">首页</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <li class="{% if request.resolver_match.url_name == 'travel_list' %} active {% endif %}">
+                                    <a href="{% url 'home:travel_list' %}" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="ti-layout-grid2-alt"></i></span>
+                                        <span class="pcoded-mtext" data-i18n="nav.basic-components.main">国内旅游景点</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="pcoded-navigation-label" data-i18n="nav.category.forms">数据分析 &amp; 可视化</div>
+                            <ul class="pcoded-item pcoded-left-item">
+                               <li class="{% if request.resolver_match.url_name == 'part1' %} active {% endif %}">
+                                    <a href="{% url 'wyf:part1' %}" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="ti-pie-chart"></i><b>FC</b></span>
+                                        <span class="pcoded-mtext" data-i18n="nav.form-components.main">景点评分信息</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <li class="{% if request.resolver_match.url_name == 'part2' %} active {% endif %}">
+                                    <a href="{% url 'wyf:part2' %}" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="ti-layers"></i><b>FC</b></span>
+                                        <span class="pcoded-mtext" data-i18n="nav.form-components.main">景点热度分析</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                               <li class="{% if request.resolver_match.url_name == 'part3' %} active {% endif %}">
+                                    <a href="{% url 'wyf:part3' %}" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="ti-printer"></i><b>FC</b></span>
+                                        <span class="pcoded-mtext" data-i18n="nav.form-components.main">门票价格分析</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <li class="{% if request.resolver_match.url_name == 'part4' %} active {% endif %}">
+                                    <a href="{% url 'wyf:part4' %}" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="ti-map"></i><b>FC</b></span>
+                                        <span class="pcoded-mtext" data-i18n="nav.form-components.main">景点区域分布</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <li class="{% if request.resolver_match.url_name == 'part5' %} active {% endif %}">
+                                    <a href="{% url 'wyf:part5' %}" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="ti-cloud"></i><b>FC</b></span>
+                                        <span class="pcoded-mtext" data-i18n="nav.form-components.main">景点词云分析</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <li class="{% if request.resolver_match.url_name == 'part6' %} active {% endif %}">
+                                    <a href="{% url 'wyf:part6' %}" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="ti-map"></i><b>FC</b></span>
+                                        <span class="pcoded-mtext" data-i18n="nav.form-components.main">景点地区分布</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <div class="pcoded-navigation-label" data-i18n="nav.category.forms">AI &amp; 智能推荐</div>
+                            <ul class="pcoded-item pcoded-left-item">
+                                <li class="{% if request.resolver_match.url_name == 'get_ai_travelRoute' %} active {% endif %}">
+                                    <a href="{% url 'home:get_ai_travelRoute' %}" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="ti-rocket"></i><b>FC</b></span>
+                                        <span class="pcoded-mtext" data-i18n="nav.form-components.main">AI旅游路线推荐</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                    <div class="pcoded-content">
+                        {% block content %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Warning Section Starts -->
+    <!-- Required Jquery -->
+    <script type="text/javascript" src="{% static 'assets/js/jquery/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/js/jquery-ui/jquery-ui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/js/popper.js/popper.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/js/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/pages/widget/excanvas.js' %}"></script>
+    <!-- waves js -->
+    <script src="{% static 'assets/pages/waves/js/waves.min.js' %}"></script>
+    <!-- jquery slimscroll js -->
+    <script type="text/javascript" src="{% static 'assets/js/jquery-slimscroll/jquery.slimscroll.js' %}"></script>
+    <!-- modernizr js -->
+    <script type="text/javascript" src="{% static 'assets/js/modernizr/modernizr.js' %}"></script>
+    <!-- slimscroll js -->
+    <script type="text/javascript" src="{% static 'assets/js/SmoothScroll.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+    <!-- Chart js -->
+    <script type="text/javascript" src="{% static 'assets/js/chart.js/Chart.js' %}"></script>
+    <!-- amchart js -->
+    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+    <script src="{% static 'assets/pages/widget/amchart/gauge.js' %}"></script>
+    <script src="{% static 'assets/pages/widget/amchart/serial.js' %}"></script>
+    <script src="{% static 'assets/pages/widget/amchart/light.js' %}"></script>
+    <script src="{% static 'assets/pages/widget/amchart/pie.min.js' %}"></script>
+    <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+    <!-- menu js -->
+    <script src="{% static 'assets/js/pcoded.min.js' %}"></script>
+    <script src="{% static 'assets/js/vertical-layout.min.js' %}"></script>
+    <!-- custom js -->
+    <script type="text/javascript" src="{% static 'assets/pages/dashboard/custom-dashboard.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/js/script.js' %}"></script>
+</body>
+</html>

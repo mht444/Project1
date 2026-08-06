@@ -1,0 +1,463 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .pcoded-inner-content {
+            margin-left: 100px; /* 给内容区留左侧间距 */
+        }
+        /* 调整侧边栏宽度（如果侧边栏过宽） */
+        .pcoded-navbar {
+            width: 100px ; /* 固定侧边栏宽度，避免挤压内容区 */
+        }
+
+        /* 单个景区项：垂直布局，图片和文字左对齐 */
+        .scenic-spot-item {
+         display: flex;        /* 图片+文字容器横向排列 */
+         gap: 12px;            /* 图片和文字的间距 */
+         padding: 12px 0;      /* 上下内边距 */
+         border-bottom: 1px solid #f5f5f5;
+        }
+
+/* 图片：固定尺寸 */
+.scenic-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 6px;
+    object-fit: cover;
+    flex-shrink: 0; /* 防止压缩 */
+}
+
+/* 文字容器：垂直布局 */
+.scenic-info {
+    flex: 1;              /* 占满剩余空间 */
+    display: flex;
+    flex-direction: column; /* 名称、评分+区域 垂直排列 */
+    justify-content: center;
+}
+
+/* 景区名称 */
+.scenic-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    margin: 0 0 4px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 评分+区域容器：横向排列，评分居右 */
+.scenic-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 评分在右，区域在左 */
+    font-size: 12px;
+}
+
+/* 热度评分 */
+.scenic-popularity {
+    color: #ff9500;
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+.scenic-popularity i {
+    font-size: 12px;
+    margin-right: 4px;
+}
+
+/* 区域信息 */
+.scenic-area {
+    color:#0b86f3 ;
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+.scenic-area i {
+    font-size: 12px;
+    margin-right: 4px;
+}
+    </style>
+
+    <!-- Page-header start -->
+    <div class="page-header">
+        <div class="page-block">
+            <div class="row align-items-center" style="padding-left: 95px; margin-top: 10px; padding-top: 5px;">
+                <div class="col-md-8">
+                    <div class="page-header-title">
+                        <h5 class="m-b-10">首页</h5>
+                        <p class="m-b-0">系统基本信息展示</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <ul class="breadcrumb-title">
+                        <li class="breadcrumb-item">
+                            <a href="index.html"> <i class="fa fa-home"></i> </a>
+                        </li>
+                        <li class="breadcrumb-item"><a href="#!">首页</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page-header end -->
+
+    <div class="pcoded-inner-content">
+        <!-- Main-body start -->
+        <div class="main-body">
+            <div class="page-wrapper">
+                <!-- Page-body start -->
+                <div class="page-body">
+                    <div class="row">
+                        <!-- task, page, download counter  start -->
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card">
+                                <div class="card-block">
+                                    <div class="row align-items-center">
+                                        <div class="col-8">
+                                            <h4 class="text-c-purple">{{non_free_count}}</h4>
+                                            <h6 class="text-muted m-b-0">收费景区数量</h6>
+                                        </div>
+                                        <div class="col-4 text-right">
+                                            <i class="fa fa-bar-chart f-28"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-c-purple">
+                                    <div class="row align-items-center">
+                                        <div class="col-9">
+                                            <p class="text-white m-b-0">收费景区</p>
+                                        </div>
+                                        <div class="col-3 text-right">
+                                            <i class="fa fa-line-chart text-white f-16"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card">
+                                <div class="card-block">
+                                    <div class="row align-items-center">
+                                        <div class="col-8">
+                                            <h4 class="text-c-green">{{pro_count}}</h4>
+                                            <h6 class="text-muted m-b-0">省份数量</h6>
+                                        </div>
+                                        <div class="col-4 text-right">
+                                            <i class="fa fa-file-text-o f-28"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-c-green">
+                                    <div class="row align-items-center">
+                                        <div class="col-9">
+                                            <p class="text-white m-b-0">系统中所有的省份</p>
+                                        </div>
+                                        <div class="col-3 text-right">
+                                            <i class="fa fa-line-chart text-white f-16"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card">
+                                <div class="card-block">
+                                    <div class="row align-items-center">
+                                        <div class="col-8">
+                                            <h4 class="text-c-red">{{city_count}}</h4>
+                                            <h6 class="text-muted m-b-0">城市数量</h6>
+                                        </div>
+                                        <div class="col-4 text-right">
+                                            <i class="fa fa-calendar-check-o f-28"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-c-red">
+                                    <div class="row align-items-center">
+                                        <div class="col-9">
+                                            <p class="text-white m-b-0">系统中所有的城市</p>
+                                        </div>
+                                        <div class="col-3 text-right">
+                                            <i class="fa fa-line-chart text-white f-16"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card">
+                                <div class="card-block">
+                                    <div class="row align-items-center">
+                                        <div class="col-8">
+                                            <h4 class="text-c-blue">{{total_reviews}}</h4>
+                                            <h6 class="text-muted m-b-0">总评论数</h6>
+                                        </div>
+                                        <div class="col-4 text-right">
+                                            <i class="fa fa-hand-o-down f-28"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-c-blue">
+                                    <div class="row align-items-center">
+                                        <div class="col-9">
+                                            <p class="text-white m-b-0">系统中所有的景区评论</p>
+                                        </div>
+                                        <div class="col-3 text-right">
+                                            <i class="fa fa-line-chart text-white f-16"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- task, page, download counter  end -->
+
+                        <!--  sale analytics start -->
+                        <div class="col-xl-8 col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>各省份景区数量</h5>
+                                    <span class="text-muted">地图展示了中国各省份的景点数量</span>
+                                </div>
+                                <div class="card-block">
+                                    <div id="part6" style="height: 500px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-md-12">
+                            <div class="card ">
+                                <div class="card-header">
+                                    <h5>景区热度排行</h5>
+                                </div>
+                                <div class="card-block">
+                                    {% for travel in top_5_travel %}
+                                    <div class="scenic-spot-item">
+                                        <img src="{{ travel.image_url }}" alt="user image"
+                                             class="scenic-image">
+                                        <div class="scenic-info">
+                                            <h6 class="scenic-name">{{ travel.name }}</h6>
+                                            <p class="scenic-popularity"><i
+                                                    class="fas fa-fire"></i>{{ travel.popularity_score }}</p>
+                                            <span class="scenic-area">
+                                                <i class="fas fa-map-marked-alt"></i>{{ travel.area }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+
+                                    <div class="text-center">
+                                        <a href="#!" class="b-b-primary text-primary">查看更多景点</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--  project and team member end -->
+
+                        <!-- 评论数前十景区 + 用户创建时间分布 横向排列 -->
+                        <div class="col-xl-8 col-md-12">
+                            <div class="card table-card">
+                                <div class="card-header">
+                                    <h5>评论数前十景区</h5>
+                                </div>
+                                <div class="card-block">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>景区名称</th>
+                                                    <th>价格</th>
+                                                    <th>评论数量</th>
+                                                    <th>景区标签</th>
+                                                    <th class="text-right">景区评分</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for travel in top_10_travel %}
+
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-inline-block align-middle">
+                                                            <img src="{{ travel.image_url }}"
+                                                                 alt="user image"
+                                                                 class=" scenic-image ">
+                                                            <div class="d-inline-block">
+                                                                <h6>{{ travel.name }}</h6>
+                                                                <p class="text-muted m-b-0">{{ travel.city }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="color:red;">{{ travel.actual_price }}</td>
+                                                    <td style="color:#0b86f3">{{ travel.review_count }}</td>
+                                                    <td>{{ travel.tags }}</td>
+                                                    <td class="text-right"><label
+                                                            class="label label-danger">
+                                                        <i class="fas fa-fire"></i>
+                                                        {{ travel.rating }}</label></td>
+                                                </tr>
+                                            {% endfor %}
+
+                                            </tbody>
+                                        </table>
+                                        <div class="text-right m-r-20">
+                                            <a href="#!" class=" b-b-primary text-primary">查看更多景点信息</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 用户创建时间分布：放在评论数前十景区右侧 -->
+                        <div class="col-xl-4 col-md-12">
+                            <div class="card" id="userCreateCard" style="font-size: 12px;">
+                                <div class="card-header">
+                                    <h4 style="font-size: 20px; margin: 0;">用户创建时间分布</h4>
+                                    <p class="text-muted">系统中用户创建时间趋势</p>
+                                </div>
+                                <div class="card-block">
+                                    <div id="userCreate" style="height:500px; width:100%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Page-body end -->
+            </div>
+            <div id="styleSelector"> </div>
+        </div>
+    </div>
+
+    <script src="{% static 'assets/js/echarts/echarts.min.js' %}"></script>
+    <script src="{% static 'assets/js/china.js' %}"></script>
+
+    <script>
+        var myChart = echarts.init(document.getElementById('part6'));
+        var mydata = {{ mapData | safe }};
+        var options = {
+            tooltip: {
+                triggerOn: "mousemove",
+                padding: 8,
+                borderWidth: 1,
+                borderColor: '#409eff',
+                backgroundColor: 'rgba(255,255,255,0.2)',
+                textStyle: {
+                    color: '#000',
+                    fontSize: 12
+                },
+                formatter: function (e, t, n) {
+                    let data = e.data;
+                    return data ? '省份：' + data.name + '\t景点数：' + data.value : '暂未拥有数据'
+                }
+            },
+            visualMap: {
+                show: true,
+                left: 26,
+                bottom: 40,
+                showLabel: true,
+                pieces: [
+                    {
+                        gte: 500,
+                        label: ">= 500",
+                        color: "#ff7979"
+                    },
+                    {
+                        gte: 300,
+                        lt: 500,
+                        label: "300 - 499",
+                        color: "#ffbe76"
+                    },
+                    {
+                        gte: 280,
+                        lt: 300,
+                        label: "280 - 299",
+                        color: "#f6e58d"
+                    },
+                    {
+                        gte: 260,
+                        lt: 280,
+                        label: "260 - 279",
+                        color: "#7ed6df"
+                    },
+                    {
+                        gte: 240,
+                        lt: 260,
+                        label: "240 - 259",
+                        color: "#badc58"
+                    },
+                    {
+                        lt: 240,
+                        label: "< 240",
+                        color: "#a29bfe"
+                    }
+                ]
+            },
+            geo: {
+                map: "china",
+                roam: true,
+                scaleLimit: {
+                    min: 1,
+                    max: 2
+                },
+                zoom: 1,
+                top: 10,
+                layoutSize: "100%", //保持地图宽高比
+                label: {
+                    show: true,
+                    fontSize: 14,
+                    color: "#333"
+                },
+                emphasis: {
+                    label: {
+                        show: false
+                    },
+                    itemStyle: {
+                        areaColor: "orange",
+                        shadowOffsetX: 0,
+                        shadowOffsetY: 0,
+                        borderWidth: 0
+                    }
+                },
+                itemStyle: {
+                    borderColor: "rgba(0, 0, 0, 0.4)",
+                    areaColor: '#45b4b4'
+                }
+            },
+            series: [
+                {
+                    name: "成果预览",
+                    type: "map",
+                    geoIndex: 0,
+                    data: mydata
+                }
+            ]
+        };
+        myChart.setOption(options);
+    </script>
+    <script>
+            var chartDom = document.getElementById('userCreate');
+            var myChart = echarts.init(chartDom);
+            var option;
+
+            option = {
+              xAxis: {
+                type: 'category',
+                data: {{ name_list|safe }},
+              },
+              yAxis: {
+                type: 'value'
+              },
+              series: [
+                {
+                  data: {{ value_list|safe }},
+                  type: 'bar'
+                }
+              ]
+            };
+
+            option && myChart.setOption(option);
+                </script>
+
+{% endblock %}

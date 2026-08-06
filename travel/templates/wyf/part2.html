@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+                    <div class="pcoded-content">
+                        <!-- Page-header start -->
+                        <div class="page-header">
+                            <div class="page-block">
+                                <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <div class="page-header-title">
+                                            <h5 class="m-b-10">景点热度信息</h5>
+                                            <p class="m-b-0">景点热度可视化</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <ul class="breadcrumb-title">
+                                            <li class="breadcrumb-item">
+                                                <a href="{% url 'home:index' %}"> <i class="fa fa-home"></i> </a>
+                                            </li>
+                                            <li class="breadcrumb-item"><a href="#!">数据可视化</a>
+                                            </li>
+                                            <li class="breadcrumb-item"><a href="#!">景点热度分析</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Page-header end -->
+                        <div class="pcoded-inner-content">
+                            <!-- Main-body start -->
+                            <div class="main-body">
+                                <div class="page-wrapper">
+                                    <div class="page-body">
+                                        <div class="row">
+
+                                            <div class="col-md-12 col-lg-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h5>景区评论数排行</h5>
+                                                    </div>
+                                                    <div class="card-block">
+                                                        <div id="part2" style="width:100%;height:600px;"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12 col-lg-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <div class="d-flex justify-content-between align-center">
+                                                            <h5 class="card-header-text">各省份景点平均评分</h5>
+                                                                <div class="dropdown-filter">
+                                                                    <select class="form-select form-select-sm" id="provinceFilter"
+                                                                            style="width: 150px;">
+                                                                        {% for city in select_list %}
+                                                                            <option value="{{ city }}">{{ city }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-block accordion-block">
+                                                        <div class="accordion-box" id="part4" style="width:100%;height:600px;"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                           </div>
+                                        </div>
+                                </div>
+                            </div>
+                            <div id="styleSelector">
+                            </div>
+                        </div>
+                    </div>
+        <script src="{% static 'assets/js/echarts/echarts.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'assets/js/jquery/jquery.min.js' %}"></script>
+        <script>
+                var chartDom = document.getElementById('part2');
+                var myChart = echarts.init(chartDom);
+                var option;
+
+                option = {
+                  tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b} : {c}%'
+                  },
+                  toolbox: {
+                    feature: {
+                      dataView: { readOnly: false },
+                      restore: {},
+                      saveAsImage: {}
+                    }
+                  },
+                  legend: {
+                    data: {{ name_list|safe }},
+                  },
+                  series: [
+                    {
+                      name: '评论数',
+                      type: 'funnel',
+                      left: '10%',
+                      top: 60,
+                      bottom: 60,
+                      width: '80%',
+                      min: 0,
+                      max: 300000,
+                      minSize: '0%',
+                      maxSize: '100%',
+                      sort: 'descending',
+                      gap: 2,
+                      label: {
+                        show: true,
+                        position: 'inside'
+                      },
+                      labelLine: {
+                        length: 10,
+                        lineStyle: {
+                          width: 1,
+                          type: 'solid'
+                        }
+                      },
+                      itemStyle: {
+                        borderColor: '#fff',
+                        borderWidth: 1
+                      },
+                      emphasis: {
+                        label: {
+                          fontSize: 20
+                        }
+                      },
+                      data: {{ data_list|safe }},
+                    }
+                  ]
+                };
+
+                option && myChart.setOption(option);
+        </script>
+        <script>
+            $(document).ready(function () {
+                var chartDom = document.getElementById('part4');
+                var myChart = echarts.init(chartDom);
+
+                // 加载初始数据
+                loadChartData()
+                $( '#provinceFilter' ).change(function () {
+                      loadChartData();
+                  });
+
+                //加载初始数据方法
+                function loadChartData() {
+                    var selectedCity = $('#provinceFilter').val();
+
+                    $.ajax({
+                        url: '{% url "wyf:get_cityData" %}',
+                        type: 'GET',
+                        data: {'city': selectedCity},
+                        dataType: 'json',
+                        success: function (response) {
+                            updateChart(response.data)
+                        }, error: function (xhr, status, error) {
+                            alert('可视化显示错误')
+                        }
+                    })
+                }
+                //更新图表函数
+                function updateChart(data) {
+                 option = {
+                  tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                      type: 'shadow'
+                    }
+                  },
+                  legend: {},
+                  xAxis: {
+                    type: 'value',
+                    boundaryGap: [0, 0.01]
+                  },
+                  yAxis: {
+                    type: 'category',
+                    data:data.names,
+                  },
+                  series: [
+                    {
+                      name: '热度评分',
+                      type: 'bar',
+                      data: data.values
+                    },
+                  ]
+                };
+                option && myChart.setOption(option);
+                }
+        })
+        </script>
+
+{% endblock %}
