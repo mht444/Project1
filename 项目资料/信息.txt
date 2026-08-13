@@ -1,5 +1,5 @@
 项目在终端运行：
-cd D:\爬虫\pythonProject\国内旅游景点分析与AI旅游路线推荐\travel
+cd "D:\Python\pythonProject\Travel_AI\travel"
 python manage.py runserver
 
 项目网址：http://127.0.0.1:8000/
